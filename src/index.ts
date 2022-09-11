@@ -3,7 +3,7 @@
  */
  interface IState<T> {
   // Attach an callback to the State.
-  attach(callback: (currentState?: T) => void): Attachment;
+  attach(callback: (currentState?: T, previousState?: T) => void): Attachment;
 
   // Update the state and fotify all callbacks.
   update(value: T): void;
@@ -19,11 +19,11 @@ export default class State<T> implements IState<T> {
 
   /**
    * 
-   * @param state 
+   * @param initialState 
    */
-  constructor(state?: T) {
-    this._state = state;
-    this._previousState = state;
+  constructor(initialState?: T) {
+    this._state = initialState;
+    this._previousState = initialState;
   }
 
   /**
@@ -49,8 +49,8 @@ export default class State<T> implements IState<T> {
    * 
    * @param callback 
    */
-  public attach(callback: (currentState?: T) => void): Attachment {
-    callback(this._state);
+  public attach(callback: (currentState?: T, previousState?: T) => void): Attachment {
+    callback(this._state, this._previousState);
 
     const key = this.callbacks.size + 1;
 
@@ -74,7 +74,7 @@ export default class State<T> implements IState<T> {
    */
   private notify(): void {
     for (const [_, callback] of this.callbacks.entries()) {
-      callback(this._state);
+      callback(this._state, this._previousState);
     }
   }
 }
