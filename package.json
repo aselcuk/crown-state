@@ -1,8 +1,8 @@
 {
   "name": "crown-state",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Lightweight state management library",
-  "main": "dist/index.js",
+  "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -12,7 +12,7 @@
     "url": "https://github.com/aselcuk/crown-state"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "minify": "npx tsc && jsmin -o dist/index.min.js dist/index.js && npx rimraf dist/index.js --force"
   },
   "keywords": [
     "state",
@@ -22,6 +22,7 @@
   "author": "Ali SELÇUK",
   "license": "ISC",
   "devDependencies": {
+    "jsmin": "^1.0.1",
     "typescript": "^4.8.3"
   }
 }
