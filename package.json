@@ -1,12 +1,13 @@
 {
   "name": "crown-state",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Lightweight state management library",
   "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "homepage": "https://crown-state-doc.vercel.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/aselcuk/crown-state"

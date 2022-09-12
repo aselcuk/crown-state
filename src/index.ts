@@ -1,7 +1,7 @@
 /**
  * The IState interface declares a set of methods for managing callbacks.
  */
- interface IState<T> {
+interface IState<T> {
   // Attach an callback to the State.
   attach(callback: (currentState?: T, previousState?: T) => void): Attachment;
 
@@ -34,7 +34,7 @@ export default class State<T> implements IState<T> {
   }
 
   /**
-   * 
+   * get previous value of currenct state
    */
   get previousValue(): T | undefined {
     return this._previousState;
@@ -56,7 +56,14 @@ export default class State<T> implements IState<T> {
 
     this.callbacks.set(key, callback);
 
-    return new Attachment(key, this.callbacks)
+    return new Attachment(key)
+  }
+
+  /**
+   * Detach removes the spcified callback from the callbacks
+   */
+  public detach(att: Attachment): void {
+    this.callbacks.delete(att.callbackIndex);
   }
 
   /**
@@ -86,21 +93,15 @@ export class Attachment {
 
   /**
    * 
-   * @param callbackIndex 
-   * @param callbacks 
+   * @param _callbackIndex 
    * @returns
    */
-  constructor(
-    private callbackIndex: number,
-    private callbacks: Map<number, Function>
-  ) {
-    return this;
-  }
+  constructor(private _callbackIndex: number) { }
 
   /**
-   * Detach removes the spcified callback from the callbacks
+   * get callbackIndex of new attach
    */
-  public detach(): void {
-    this.callbacks.delete(this.callbackIndex);
+  get callbackIndex(): number {
+    return this._callbackIndex;
   }
 }
