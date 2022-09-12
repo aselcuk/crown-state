@@ -1,6 +1,6 @@
 {
   "name": "crown-state",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Lightweight state management library",
   "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,9 @@
     "url": "https://github.com/aselcuk/crown-state"
   },
   "scripts": {
-    "minify": "npx tsc && jsmin -o dist/index.min.js dist/index.js && npx rimraf dist/index.js --force"
+    "build": "npx tsc && yarn minify && yarn minify-utils",
+    "minify": "jsmin -o dist/index.min.js dist/index.js && npx rimraf dist/index.js --force",
+    "minify-utils": "jsmin -o dist/utils/generateGuid.min.js dist/utils/generateGuid.js && npx rimraf dist/utils/generateGuid.js --force"
   },
   "keywords": [
     "state",
