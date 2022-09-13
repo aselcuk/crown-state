@@ -1,116 +1,89 @@
 # Crown State
 
-Lightweight state management library
+Crown State is a lightweight state management library.
+Just listens to state and sends changes to page or component that attach
 
 ## Installation
 
+Crown State is available as a package on NPM and YARN:
 
 ```bash
-npm install crown-state --save
+# NPM
+npm install crown-state
 ```
 
-## Firstly define state
+```bash
+# YARN
+yarn add crown-state
+```
 
-```js
+## Documantation
+The Crown State docs are located at [crown-state](https://crown-state-doc.vercel.app)
+
+- [Intoduction](https://crown-state-doc.vercel.app/docs/intro)
+- [React Usage](https://crown-state-doc.vercel.app/docs/intro)
+
+## Create a global state object
+
+Create a new global state and export it, you can use with type and initial values
+
+```tsx
+// user-state.ts
+
 import State from "crown-state";
 
-export type FakeStateType = {
-  age?: number;
-  name?: string;
-}
+//Initial State Type
+type UserType = {
+  age: number;
+  name: string;
+};
 
-export const $userState = new State<FakeStateType>({
-  name: 'Demo',
-  age: 27
+export const $user = new State<UserType>({
+  age: 27,
+  name: "Selçuk",
 });
 ```
 
-## Import and use anywhere
+## Listen the state
 
-```jsx
-import { Attachment } from "crown-state"
-import { $userState, FakeStateType } from "../../global-states/user-state"
+```tsx
+import { $user } from "../user-state";
+import { Attachment } from "crown-state";
 
-export function UserInfo() {
-  const [user, setUser] = useState<FakeStateType>()
+/**
+ * This method attaches to the relevant state and returns an Attachment 
+ * type value. In case of any change on this state, both current state 
+ * and previous state values can be accessed via the callback method.
+ */
+const att = Attachment = $user.attach((value, previousValue) => {
+  console.log(value);
+  console.log(previousValue);
+});
 
-  useEffect(() => {
-    const att: Attachment = $userState.attach(data => setUser(data))
-
-    return () => {
-      att.detach();
-    }
-  }, []);
-
-  return (
-    <span>{user?.name}</span>
-  )
-}
+/**
+ * If you don't want to listen to the changes on this state, 
+ * you can use the detach method.
+ */
+att.detach();
 ```
 
-## Update state
+## Update the state
 
-```js
-import { $userState } from "../../global-states/user-state"
+```tsx
+import { $user } from "../user-state";
 
-export function UpdateUser() {
+// To update the state just pass the values to the update method
+$user.update({
+  name: 'changed name',
+  age: 28
+});
 
-  const handleUser = () => {
-    $userState.update({
-      ...$userState.value,
-      age: 28
-    })
-  }
-
-  return (
-    <button onClick={handleUser}>Change the state</button>
-  )
-}
+// If you want to change only one field in state
+$user.update({
+  ...$user.value, // value gives you the current state value
+  name: 'changed name'
+});
 ```
-
-## Get Previous state
-
-```js
-import { Attachment } from "crown-state"
-import { $userState, FakeStateType } from "../../global-states/user-state"
-
-export function UserInfo() {
-  const [user, setUser] = useState<FakeStateType>();
-  const [previousUserValue, setPreviousUserValue] = useState<FakeStateType>();
-
-  useEffect(() => {
-    const att: Attachment = $userState.attach((value, previousValue) => {
-      setUser(value)
-      setPreviousUserValue(previousValue)
-    })
-
-    return () => {
-      att.detach();
-    }
-  }, []);
-
-  const handleUser = () => {
-    $userState.update({
-      ...$userState.value,
-      age: 28
-    })
-  }
-
-export function ShowPrevious() {
-
-  return (
-    <div>
-      <div> Current State: {user?.age}</div>
-      <div> Previous State: {previousUserValue?.age}</div>
-
-      <button onClick={handleUser}>Change the state</button>
-    </div>
-  )
-}
-```
-
-## Props
-will be added
 
 ## License
 [ISC](https://opensource.org/licenses/ISC)
