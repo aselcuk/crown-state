@@ -5,7 +5,7 @@
   // Attach an callback to the State.
   attach(callback: (currentState?: T, previousState?: T) => void): Attachment;
 
-  // Update the state and fotify all callbacks.
+  // Update the state and notify all callbacks.
   update(value: T): void;
 }
 
@@ -34,7 +34,7 @@ export default class State<T> implements IState<T> {
   }
 
   /**
-   * 
+   * get value of previous state
    */
   get previousValue(): T | undefined {
     return this._previousState;
@@ -106,7 +106,7 @@ export class Attachment {
 }
 
 /**
- * generate guid
+ * @utilyty generate guid
  * @returns guid
  */
 function generateGuid()  

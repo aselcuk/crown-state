@@ -1,6 +1,6 @@
 {
   "name": "crown-state",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Lightweight state management library",
   "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
