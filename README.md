@@ -21,7 +21,8 @@ yarn add crown-state
 The Crown State docs are located at [crown-state](https://crown-state-doc.vercel.app)
 
 - [Intoduction](https://crown-state-doc.vercel.app/docs/intro)
-- [React Usage](https://crown-state-doc.vercel.app/docs/react-usage)
+- [React Usage](https://crown-state-doc.vercel.app/docs/React/react-usage)
+- [With Custom React Hook Usage](https://crown-state-doc.vercel.app/docs/React/react-with-custom-hook)
 
 ## Create a global state object
 
