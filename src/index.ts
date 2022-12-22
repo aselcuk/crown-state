@@ -52,7 +52,7 @@ export default class State<T> implements IState<T> {
   public attach(callback: (currentState?: T, previousState?: T) => void): Attachment {
     callback(this._state, this._previousState);
 
-    const key = generateGuid();
+    const key = crypto.randomUUID();
 
     this.callbacks.set(key, callback);
 
@@ -103,16 +103,4 @@ export class Attachment {
   public detach(): void {
     this.callbacks.delete(this.callbackIndex);
   }
-}
-
-/**
- * @utilyty generate guid
- * @returns guid
- */
-function generateGuid()  
-{  
-   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {  
-      var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);  
-      return v.toString(16);  
-   });  
 }
