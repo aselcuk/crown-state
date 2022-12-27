@@ -1,7 +1,7 @@
 /**
  * The IState interface declares a set of methods for managing callbacks.
  */
- interface IState<T> {
+interface IState<T> {
   // Attach an callback to the State.
   attach(callback: (currentState?: T, previousState?: T) => void): Attachment;
 
@@ -52,7 +52,7 @@ export default class State<T> implements IState<T> {
   public attach(callback: (currentState?: T, previousState?: T) => void): Attachment {
     callback(this._state, this._previousState);
 
-    const key = crypto.randomUUID();
+    const key = generateGuid();
 
     this.callbacks.set(key, callback);
 
@@ -103,4 +103,16 @@ export class Attachment {
   public detach(): void {
     this.callbacks.delete(this.callbackIndex);
   }
+}
+
+/**
+ * @utilyty generate guid
+ * @returns guid
+ */
+function generateGuid()  
+{  
+   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {  
+      var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);  
+      return v.toString(16);  
+   });  
 }
