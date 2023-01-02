@@ -62,20 +62,31 @@ export default class State<T> implements IState<T> {
   /**
    * Update current state and trigger notify
    */
-  public update(value: T): void {
+  public update(value: T, callback?: (newValue: T) => void): void {
     this._previousState = this._state;
     this._state = value;
 
-    this.notify();
+    this.notify().then(() => {
+      if (callback) callback(value);
+    });
   }
 
   /**
    * Trigger an update in each callback.
    */
-  private notify(): void {
-    for (const [_, callback] of this.callbacks.entries()) {
-      callback(this._state, this._previousState);
-    }
+  private notify(): Promise<void> {
+    return new Promise((resolve) => {
+      const callbacks = Array.from(this.callbacks.values());
+      let i = 0;
+
+      for (i = 0; i < callbacks.length; i++) {
+        const callback = callbacks[i];
+
+        callback(this._state, this._previousState);
+      }
+
+      if (i === callbacks.length) resolve();
+    });
   }
 }
 
@@ -109,10 +120,9 @@ export class Attachment {
  * @utilyty generate guid
  * @returns guid
  */
-function generateGuid()  
-{  
-   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {  
-      var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);  
-      return v.toString(16);  
-   });  
+function generateGuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }
