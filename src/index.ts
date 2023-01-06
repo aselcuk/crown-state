@@ -62,7 +62,7 @@ export default class State<T> implements IState<T> {
   /**
    * Update current state and trigger notify
    */
-  public update(value: T, callback?: (newValue: T) => void): void {
+  public update(value: T, callback?: (newValue?: T) => void): void {
     this._previousState = this._state;
     this._state = value;
 
