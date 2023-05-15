@@ -1,6 +1,6 @@
 {
   "name": "crown-state",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Lightweight state management library",
   "main": "dist/index.min.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "npx tsc && yarn minify",
-    "minify": "jsmin -o dist/index.min.js dist/index.js && npx rimraf dist/index.js --force"
+    "minify": "jsmin -o dist/index.min.js dist/index.js && npx rimraf dist/index.js"
   },
   "keywords": [
     "state",
