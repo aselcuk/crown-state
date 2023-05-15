@@ -1,25 +1,54 @@
 /**
+ * The ICallback type declares callback method type.
+ */
+export type ICallback<T> = (currentState?: T, previousState?: T) => void;
+
+/**
  * The IState interface declares a set of methods for managing callbacks.
  */
-interface IState<T> {
+export interface IState<T> {
   // Attach an callback to the State.
-  attach(callback: (currentState?: T, previousState?: T) => void): Attachment;
+  attach(callback: ICallback<T>): Attachment;
 
   // Update the state and notify all callbacks.
   update(value: T): void;
 }
 
 /**
+ * Attachment contains a detach method and removes the spcified callback from the callbacks.
+ */
+export class Attachment {
+  /**
+   *
+   * @param callbackIndex
+   * @param callbacks
+   * @returns
+   */
+  constructor(
+    private callbackIndex: string,
+    private callbacks: Map<string, Function>
+  ) {
+    return this;
+  }
+
+  /**
+   * Detach removes the spcified callback from the callbacks
+   */
+  public detach(): void {
+    this.callbacks.delete(this.callbackIndex);
+  }
+}
+
+/**
  * State contains a state object and notifies all callbacks at once.
  */
 export default class State<T> implements IState<T> {
-
   private _previousState?: T;
   private _state?: T;
 
   /**
-   * 
-   * @param initialState 
+   *
+   * @param initialState
    */
   constructor(initialState?: T) {
     this._state = initialState;
@@ -46,17 +75,17 @@ export default class State<T> implements IState<T> {
   private callbacks: Map<string, Function> = new Map();
 
   /**
-   * 
-   * @param callback 
+   *
+   * @param callback
    */
-  public attach(callback: (currentState?: T, previousState?: T) => void): Attachment {
+  public attach(callback: ICallback<T>): Attachment {
     callback(this._state, this._previousState);
 
-    const key = generateGuid();
+    const key = Math.random().toFixed(8);
 
     this.callbacks.set(key, callback);
 
-    return new Attachment(key, this.callbacks)
+    return new Attachment(key, this.callbacks);
   }
 
   /**
@@ -77,52 +106,12 @@ export default class State<T> implements IState<T> {
   private notify(): Promise<void> {
     return new Promise((resolve) => {
       const callbacks = Array.from(this.callbacks.values());
-      let i = 0;
+      const callbackPromises = callbacks.map(
+        (c) =>
+          new Promise((resolve) => resolve(c(this._state, this._previousState)))
+      );
 
-      for (i = 0; i < callbacks.length; i++) {
-        const callback = callbacks[i];
-
-        callback(this._state, this._previousState);
-      }
-
-      if (i === callbacks.length) resolve();
+      Promise.all(callbackPromises).then(() => resolve());
     });
   }
-}
-
-/**
- * Attachment contains a detach method and removes the spcified callback from the callbacks.
- */
-export class Attachment {
-
-  /**
-   * 
-   * @param callbackIndex 
-   * @param callbacks 
-   * @returns
-   */
-  constructor(
-    private callbackIndex: string,
-    private callbacks: Map<string, Function>
-  ) {
-    return this;
-  }
-
-  /**
-   * Detach removes the spcified callback from the callbacks
-   */
-  public detach(): void {
-    this.callbacks.delete(this.callbackIndex);
-  }
-}
-
-/**
- * @utilyty generate guid
- * @returns guid
- */
-function generateGuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
 }
